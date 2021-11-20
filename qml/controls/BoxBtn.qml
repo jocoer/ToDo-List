@@ -5,6 +5,8 @@ Button {
     id: btnBox
     text: qsTr("Left Menu Btn")
 
+    signal textChanged()
+
     // Custom Properties
     property url btnIconSource: "../../images/svg_images/box.svg"
     property color btnColorDefault: "#1c1d20"
@@ -35,6 +37,7 @@ Button {
             input.focus = false
             btnBox.text = input.text
             title.visible = true
+            textChanged ()
         }
 
     }

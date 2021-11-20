@@ -2,6 +2,7 @@ from PySide2.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot
 from task import Task
 from box import Box
 
+"""任务数据类"""
 class TaskModel (QAbstractListModel):
     _name = Qt.UserRole + 1
     _description = Qt.UserRole + 2
@@ -22,8 +23,9 @@ class TaskModel (QAbstractListModel):
             return t.name
         elif (role == self._description):
             return t.describe
+        else:
+            return ""
 
-        return "1"
     def roleNames(self):
         return {
             self._name: b'taskName',
@@ -50,7 +52,13 @@ class TaskModel (QAbstractListModel):
         self._data.clear ()
         self.endRemoveRows() 
 
-"""数据类"""
+    @Slot (str, int)
+    def editTaskName (self, name, index):
+        ix = self.index (index, 0)
+        self._data[index].name = name
+        self.dataChanged.emit (ix, ix, self.roleNames())
+
+"""任务盒数据类"""
 class BoxModel (QAbstractListModel):
     Name_Role = Qt.UserRole + 1
     def __init__ (self):
@@ -109,3 +117,21 @@ class BoxModel (QAbstractListModel):
 
     def getData (self, index:int) -> TaskModel:
         return self._data[index]
+
+    """修改盒子名称等信息"""
+    # @pyqtSlot(int, str, int) 
+    # def editPerson(self, row, name, age): 
+    #  ix = self.index(row, 0) 
+    #  self.persons[row] = {'name': name, 'age': age} 
+    #  self.dataChanged.emit(ix, ix, self.roleNames()) 
+    @Slot (str, int)
+    def editBoxName (self, name, index):
+        ix = self.index (index, 0)
+        self._data[index].name = name
+        self.dataChanged.emit (ix, ix, self.roleNames())
+
+    @Slot (str, int, int)
+    def editTaskName (self, name, boxIndex, taskIndex):
+        ix = self.index (boxIndex, 0)
+        self._data[boxIndex].tasks[taskIndex].name = name
+        self.dataChanged.emit (ix, ix, self.roleNames())

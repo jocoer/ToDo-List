@@ -45,6 +45,9 @@ Item {
                     delegate: BoxBtn {
                         text: dmBox
                         isActiveMenu: ListView.isCurrentItem
+                        onTextChanged: {
+                            boxModel.editBoxName (text, index)
+                        } 
                         onClicked: {
                             taskModel.clearTask ()
                             boxView.currentIndex = index
@@ -195,6 +198,11 @@ Item {
                             width: rectangle.width
                             isActiveMenu: ListView.isCurrentItem
                             onClicked: taskView.currentIndex = index
+                            onNameChanged:{
+                                taskModel.editTaskName (text, index)
+                                boxModel.editTaskName (text, boxView.currentIndex, index)
+                                console.log ("edit task name")
+                            }
                         }
                     }
                 }

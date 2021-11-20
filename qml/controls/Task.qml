@@ -5,6 +5,8 @@ Button {
     id: btnBox
     text: qsTr("This is a task")
 
+    signal nameChanged ()
+
     // Custom Properties
     property color btnColorDefault: "#1c1d20"
     property color btnColorMouseOver: "#23272E"
@@ -33,6 +35,7 @@ Button {
             input.focus = false
             btnBox.text = input.text
             title.visible = true
+            nameChanged ()
         }
 
         function checkTask () {
