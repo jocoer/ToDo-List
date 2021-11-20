@@ -302,6 +302,7 @@ minimizeRestore
                             onClicked: {
                                 btnHome.isActiveMenu = true
                                 btnSettings.isActiveMenu = false
+                                stackView.clear ()
                                 stackView.push(Qt.resolvedUrl("./pages/homePage.qml"))
                             }
                         }
@@ -335,6 +336,7 @@ minimizeRestore
                         onClicked: {
                             btnHome.isActiveMenu = false
                             btnSettings.isActiveMenu = true
+                            stackView.pop ()
                             stackView.push(Qt.resolvedUrl("./pages/settingsPage.qml"))
                         }
                     }
@@ -356,14 +358,14 @@ minimizeRestore
                     StackView {
                         id: stackView
                         anchors.fill: parent
-                        initialItem: Qt.resolvedUrl("./pages/homePage.qml")
+                        property var boxModel: myModel
+                        property var taskModel: tasks 
                     }
                 }
             }
 
         }
     }
-
 }
 
 

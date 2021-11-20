@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 
 Button {
     id: btnBox
-    text: qsTr("Left Menu Btn")
+    text: qsTr("This is a task")
 
     // Custom Properties
     property color btnColorDefault: "#1c1d20"
@@ -13,6 +13,7 @@ Button {
     property color activeMenuColorRight: "#2c313c"
 
     property bool isActiveMenu: false
+//    property bool isHovered: false
 
     QtObject {
         id: internal
@@ -160,7 +161,7 @@ Button {
                     height: 20
                     fillMode: Image.PreserveAspectFit
                 }
-                visible: isActiveMenu
+                visible: btnBox.hovered
             }
         }
     }

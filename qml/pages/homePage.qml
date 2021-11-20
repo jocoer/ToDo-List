@@ -3,9 +3,8 @@ import QtQuick.Controls 2.15
 import "../controls"
 
 Item {
+    id: root
 
-    //    width: 500
-    //    height: 300
     Rectangle {
         id: bg
         color: "#2c313c"
@@ -35,17 +34,22 @@ Item {
                 anchors.leftMargin: 0
 
                 ListView {
-                    id: listView1
+                    id: boxView
                     x: 0
                     y: 0
                     spacing: 5
                     clip: true
                     anchors.topMargin: 30
                     anchors.fill: parent
-                    model: 30
+                    model: boxModel
                     delegate: BoxBtn {
+                        text: dmBox
                         isActiveMenu: ListView.isCurrentItem
-                        onClicked: listView1.currentIndex = index
+                        onClicked: {
+                            taskModel.clearTask ()
+                            boxView.currentIndex = index
+                            boxModel.getTasks (index)
+                        }
                     }
                 }
             }
@@ -90,7 +94,9 @@ Item {
                     anchors.leftMargin: 0
                     anchors.top: parent.top
                     anchors.topMargin: 0
-
+                    onClicked: {
+                        myModel.addBox ("add")
+                    }
                 }
             }
         }
@@ -155,7 +161,10 @@ Item {
                         anchors.bottomMargin: 0
                         anchors.top: parent.top
                         anchors.topMargin: 0
-
+                        onClicked: {
+                            taskModel.addTask ("task")
+                            boxModel.addTask (boxView.currentIndex, "task", "")
+                        }
                     }
                 }
 
@@ -174,24 +183,34 @@ Item {
                     anchors.leftMargin: 0
 
                     ListView {
-                        id: listView
+                        id: taskView
                         spacing: 8
                         anchors.leftMargin: 20
                         clip: true
                         anchors.topMargin: 10
                         anchors.fill: parent
-                        model: 3
+                        model: taskModel
                         delegate: Task {
+                            text: taskName
                             width: rectangle.width
                             isActiveMenu: ListView.isCurrentItem
-                            onClicked: listView.currentIndex = index
+                            onClicked: taskView.currentIndex = index
                         }
                     }
                 }
             }
         }
     }
-
+    Connections {
+        target: boxModel
+        function onAddtask (name, description) {
+            taskModel.addTask (name, description)
+            taskModel.taskCount ()
+        }
+    }
+    Connections {
+        target: taskModel
+    }
 }
 
 

@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 2.15
 
 Item {
+    id: root
+    property var text: "value"
     Rectangle {
         id: bg
         color: "#f17979"
@@ -11,7 +13,7 @@ Item {
             id: label
             x: 304
             y: 196
-            text: qsTr("Settings Page")
+            text: root.text
             font.pointSize: 24
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
