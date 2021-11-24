@@ -46,12 +46,11 @@ Item {
                         text: dmBox
                         isActiveMenu: ListView.isCurrentItem
                         onTextChanged: {
-                            boxModel.editBoxName (text, index)
+                            backend.editBox (index, text)
                         } 
                         onClicked: {
-                            taskModel.clearTask ()
+                            backend.changeBox (index)
                             boxView.currentIndex = index
-                            boxModel.getTasks (index)
                         }
                     }
                 }
@@ -98,7 +97,7 @@ Item {
                     anchors.top: parent.top
                     anchors.topMargin: 0
                     onClicked: {
-                        myModel.addBox ("add")
+                        backend.addBox ("add")
                     }
                 }
             }
@@ -165,8 +164,7 @@ Item {
                         anchors.top: parent.top
                         anchors.topMargin: 0
                         onClicked: {
-                            taskModel.addTask ("task")
-                            boxModel.addTask (boxView.currentIndex, "task", "")
+                            backend.addTask (boxView.currentIndex, "new Task")
                         }
                     }
                 }
@@ -195,13 +193,18 @@ Item {
                         model: taskModel
                         delegate: Task {
                             text: taskName
+                            finished: finish
                             width: rectangle.width
                             isActiveMenu: ListView.isCurrentItem
                             onClicked: taskView.currentIndex = index
                             onNameChanged:{
-                                taskModel.editTaskName (text, index)
-                                boxModel.editTaskName (text, boxView.currentIndex, index)
-                                console.log ("edit task name")
+                                backend.editTask (boxView.currentIndex, index, text, 0)
+                            }
+                            onFinishChanged: {
+                                backend.editTask (boxView.currentIndex, index, str, 1)
+                            }
+                            onDeleteTask: {
+                                backend.removeTask (boxView.currentIndex, index)
                             }
                         }
                     }
@@ -211,13 +214,13 @@ Item {
     }
     Connections {
         target: boxModel
-        function onAddtask (name, description) {
-            taskModel.addTask (name, description)
-            taskModel.taskCount ()
-        }
     }
     Connections {
         target: taskModel
+    }
+
+    Connections {
+        target: backend
     }
 }
 

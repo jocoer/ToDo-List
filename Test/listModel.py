@@ -1,4 +1,4 @@
-from PySide2.QtCore import QAbstractListModel, QModelIndex, Qt, Signal, Slot
+from PySide2.QtCore import QAbstractListModel, QModelIndex, QObject, Qt, Signal, Slot
 from task import Task
 from box import Box
 
@@ -6,6 +6,7 @@ from box import Box
 class TaskModel (QAbstractListModel):
     _name = Qt.UserRole + 1
     _description = Qt.UserRole + 2
+    _finish = Qt.UserRole + 3
 
     def __init__ (self):
         QAbstractListModel.__init__ (self)
@@ -23,40 +24,44 @@ class TaskModel (QAbstractListModel):
             return t.name
         elif (role == self._description):
             return t.describe
+        elif role == self._finish:
+            return t.finished
         else:
             return ""
 
     def roleNames(self):
         return {
             self._name: b'taskName',
-            self._description: b'taskDesc'
+            self._description: b'taskDesc',
+            self._finish: b'finish'
         }
 
-    @Slot ()
-    def taskCount (self):
-        count = 0
-        for t in self._data:
-            count += 1
-        print (f"task count: {count}")
 
-    @Slot (str)
-    def addTask (self, name):
-        self.beginInsertRows (QModelIndex (), self.rowCount(), self.rowCount())
-        t = Task (name)
-        self._data.append (t)
-        self.endInsertRows ()
+    # @Slot ()
+    # def taskCount (self):
+    #     count = 0
+    #     for t in self._data:
+    #         count += 1
+    #     print (f"task count: {count}")
 
-    @Slot() 
-    def clearTask(self): 
-        self.beginRemoveRows(QModelIndex(), 0, self.rowCount()) 
-        self._data.clear ()
-        self.endRemoveRows() 
+    # @Slot (str)
+    # def addTask (self, name):
+    #     self.beginInsertRows (QModelIndex (), self.rowCount(), self.rowCount())
+    #     t = Task (name)
+    #     self._data.append (t)
+    #     self.endInsertRows ()
 
-    @Slot (str, int)
-    def editTaskName (self, name, index):
-        ix = self.index (index, 0)
-        self._data[index].name = name
-        self.dataChanged.emit (ix, ix, self.roleNames())
+    # @Slot() 
+    # def clearTask(self): 
+    #     self.beginRemoveRows(QModelIndex(), 0, self.rowCount()) 
+    #     self._data.clear ()
+    #     self.endRemoveRows() 
+
+    # @Slot (str, int)
+    # def editTaskName (self, name, index):
+    #     ix = self.index (index, 0)
+    #     self._data[index].name = name
+    #     self.dataChanged.emit (ix, ix, self.roleNames())
 
 """任务盒数据类"""
 class BoxModel (QAbstractListModel):
@@ -65,73 +70,84 @@ class BoxModel (QAbstractListModel):
         QAbstractListModel.__init__ (self)
         self._data= [] 
         self._role_names = {}
-
         # role-names
         self._role_names[self.Name_Role] = "dmBox"
 
     def rowCount (self, parent = None) -> int:
         return len (self._data)
 
-    def getBoxName (self, b) -> str:
-        """获取当前任务盒的名称"""
-        return b.getName ()
-
-    addtask = Signal (str, str)
-    # gotTask = Signal (str, str)
-    @Slot (int)
-    def getTasks (self, index):
-        ts = self._data [index].tasks
-        count = 0
-        for t in ts:
-            print ("get task")
-            count += 1
-            self.addtask.emit (t.name, t.describe)
-        print (f"count: {count}")
-
     def data (self, index, role):
         if not index.isValid():
             return Box ()
         b = self._data[index.row()]
         if (role == self.Name_Role):
-            return self.getBoxName (b)
+            return b.getName ()
 
     def roleNames(self):
         return {
-            self.Name_Role: b'dmBox'
+            self.Name_Role: b'dmBox',
         }
 
+
+"""顶层数据类"""
+class Backend (QObject):
+    def __init__ (self):
+        QObject.__init__ (self)
+        self.boxModel = BoxModel ()
+        self.taskModel = TaskModel ()
+
+    # 改变当前选中的任务盒
+    @Slot (int)
+    def changeBox (self, index:int):
+        self.taskModel.beginResetModel ()
+        self.taskModel._data = self.boxModel._data[index].tasks
+        self.taskModel.endResetModel ()
+
+    # 添加任务盒
     @Slot (str)
     def addBox (self, name):
-        self.beginInsertRows (QModelIndex (), self.rowCount(), self.rowCount())
-        b = Box ()
-        b.name = name
-        self._data.append (b)
-        self.endInsertRows ()
+        self.boxModel.beginInsertRows (QModelIndex (), self.boxModel.rowCount(), self.boxModel.rowCount())
+        newBox = Box ()
+        newBox.name = name
+        self.boxModel._data.append (newBox)
+        self.boxModel.endInsertRows ()
 
-    @Slot (int, str, str)
-    def addTask (self, index, name, desc):
-        print ("add")
-        t = Task (name)
-        t.describe = desc
-        self._data[index].add_task(t)
+    # 添加任务
+    @Slot (int, str)
+    def addTask (self, boxIndex:int, name:str):
+        self.taskModel.beginInsertRows (QModelIndex(), self.taskModel.rowCount (), self.taskModel.rowCount ())
+        newTask = Task (name)
+        self.boxModel._data[boxIndex].tasks.append (newTask)
+        self.taskModel.endInsertRows ()
 
-    def getData (self, index:int) -> TaskModel:
-        return self._data[index]
+    # 修改任务盒名称
+    @Slot (int, str)
+    def editBox (self, boxIndex:int, name:str):
+        ix = self.boxModel.index (boxIndex, 0)
+        self.boxModel._data[boxIndex].name = name
+        self.boxModel.dataChanged.emit (ix, ix, self.boxModel.roleNames())
 
-    """修改盒子名称等信息"""
-    # @pyqtSlot(int, str, int) 
-    # def editPerson(self, row, name, age): 
-    #  ix = self.index(row, 0) 
-    #  self.persons[row] = {'name': name, 'age': age} 
-    #  self.dataChanged.emit(ix, ix, self.roleNames()) 
-    @Slot (str, int)
-    def editBoxName (self, name, index):
-        ix = self.index (index, 0)
-        self._data[index].name = name
-        self.dataChanged.emit (ix, ix, self.roleNames())
+    # 修改任务相关信息
+    """
+        flag:
+            0 -> 修改任务名称
+            1 -> 修改任务完成情况
+    """
+    @Slot (int, int, str, int)
+    def editTask (self, boxIndex:int, taskIndex:int, text:str, flag:int):
+        ix = self.taskModel.index (taskIndex, 0)
+        if flag == 0:
+            self.boxModel._data[boxIndex].tasks[taskIndex].name = text
+        elif flag == 1:
+            finish = eval (text)
+            self.boxModel._data[boxIndex].tasks[taskIndex].finished = bool (finish)
 
-    @Slot (str, int, int)
-    def editTaskName (self, name, boxIndex, taskIndex):
-        ix = self.index (boxIndex, 0)
-        self._data[boxIndex].tasks[taskIndex].name = name
-        self.dataChanged.emit (ix, ix, self.roleNames())
+        self.taskModel.dataChanged.emit (ix, ix, self.taskModel.roleNames())
+
+    # 删除任务
+    @Slot (int, int)
+    def removeTask (self, boxIndex:int, taskIndex:int):
+        print (f"boxIndex:{boxIndex}, taskIndex: {taskIndex}")
+        self.taskModel.beginRemoveRows (QModelIndex(), taskIndex, taskIndex)
+        del self.boxModel._data[boxIndex].tasks[taskIndex]
+        self.taskModel.endRemoveRows ()

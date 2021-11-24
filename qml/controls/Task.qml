@@ -6,6 +6,8 @@ Button {
     text: qsTr("This is a task")
 
     signal nameChanged ()
+    signal finishChanged (string str)
+    signal deleteTask ()
 
     // Custom Properties
     property color btnColorDefault: "#1c1d20"
@@ -16,6 +18,8 @@ Button {
 
     property bool isActiveMenu: false
 //    property bool isHovered: false
+
+    property bool finished: false
 
     QtObject {
         id: internal
@@ -41,13 +45,11 @@ Button {
         function checkTask () {
             if (checkBox.checkState === Qt.Checked)
             {
-                title.font.strikeout = true
-                title.opacity = 0.5
+                finishChanged ("1")
             }
             else
             {
-                title.font.strikeout = false
-                title.opacity = 1
+                finishChanged ("0")
             }
         }
 
@@ -118,6 +120,8 @@ Button {
             id: title
             color: "#ffffff"
             text: btnBox.text
+            opacity: if (checkBox.checkState == Qt.Checked) { return 0.5 } else { return 1 }
+            font.strikeout: if (checkBox.checkState == Qt.Checked) {return true} else {return false}
             font.italic: false
             font.pointSize: 12
             anchors.verticalCenter: parent.verticalCenter
@@ -128,6 +132,7 @@ Button {
 
         CheckBox {
             id: checkBox
+            checked:finished
             text: qsTr("")
             anchors.left: parent.left
             anchors.leftMargin: 10
@@ -136,7 +141,7 @@ Button {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
             display: AbstractButton.IconOnly
-            onCheckStateChanged: internal.checkTask()
+            onClicked: internal.checkTask()
         }
 
         RoundButton {
@@ -156,7 +161,6 @@ Button {
                 height: 20
                 color: "#00000000"
                 radius: 10
-//                anchors.fill: parent
                 Image {
                     source: "../../images/svg_images/delete.svg"
                     anchors.fill: parent
@@ -166,6 +170,7 @@ Button {
                 }
                 visible: btnBox.hovered
             }
+            onClicked: deleteTask ()
         }
     }
 }

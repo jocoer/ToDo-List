@@ -360,6 +360,7 @@ minimizeRestore
                         anchors.fill: parent
                         property var boxModel: myModel
                         property var taskModel: tasks 
+                        property var back: backend
                     }
                 }
             }
