@@ -109,7 +109,7 @@ Button {
             visible: false
 
             selectByMouse: true
-            maximumLength: 15
+            maximumLength: 30
 
             onEditingFinished: {
                 internal.finishInput()
