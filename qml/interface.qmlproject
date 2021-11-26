@@ -3,11 +3,11 @@
 import QmlProject 1.1
 
 Project {
-    mainFile: "interface.qml"
+//    mainFile: "interface.qml"
 //    mainFile: "controls/CustomBtn.qml"
 //    mainFile: "controls/TopBarButton.qml"
 //    mainFile: "controls/LeftMenuBtn.qml"
-//    mainFile: "pages/homePage.qml"
+    mainFile: "pages/homePage.qml"
 //    mainFile: "controls/BoxBtn.qml"
 //    mainFile: "controls/Task.qml"
 

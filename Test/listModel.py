@@ -151,3 +151,10 @@ class Backend (QObject):
         self.taskModel.beginRemoveRows (QModelIndex(), taskIndex, taskIndex)
         del self.boxModel._data[boxIndex].tasks[taskIndex]
         self.taskModel.endRemoveRows ()
+
+    # 删除任务盒
+    @Slot (int)
+    def removeBox (self, boxIndex:int):
+        self.boxModel.beginRemoveRows (QModelIndex(), boxIndex, boxIndex)
+        del self.boxModel._data[boxIndex]
+        self.boxModel.endRemoveRows ()

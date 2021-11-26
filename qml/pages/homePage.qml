@@ -42,6 +42,7 @@ Item {
                     anchors.topMargin: 30
                     anchors.fill: parent
                     model: boxModel
+                    focus: true
                     delegate: BoxBtn {
                         text: dmBox
                         isActiveMenu: ListView.isCurrentItem
@@ -51,6 +52,9 @@ Item {
                         onClicked: {
                             backend.changeBox (index)
                             boxView.currentIndex = index
+                        }
+                        onDeleteBox: {
+                            backend.removeBox (index)
                         }
                     }
                 }

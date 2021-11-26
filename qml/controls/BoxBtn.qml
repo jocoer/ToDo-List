@@ -6,6 +6,7 @@ Button {
     text: qsTr("Left Menu Btn")
 
     signal textChanged()
+    signal deleteBox ()
 
     // Custom Properties
     property url btnIconSource: "../../images/svg_images/box.svg"
@@ -52,7 +53,7 @@ Button {
     background: Rectangle {
         id: bgBtn
         color: internal.dynamicColor
-
+        visible: btnBox.hovered
         Rectangle {
             anchors {
                 top: parent.top
@@ -126,6 +127,35 @@ Button {
             anchors.leftMargin: 80
 
         }
+        RoundButton {
+            id: roundButton
+            x: 302
+            y: 12
+            width: 20
+            height: 20
+            text: ""
+            anchors.right: parent.right
+            anchors.rightMargin: 30
+            anchors.verticalCenter: parent.verticalCenter
+
+            background: Rectangle {
+                id: bg
+                width: 20
+                height: 20
+                color: "#00000000"
+                radius: 10
+                Image {
+                    source: "../../images/svg_images/delete.svg"
+                    anchors.fill: parent
+                    width: 20
+                    height: 20
+                    fillMode: Image.PreserveAspectFit
+                }
+                visible: btnBox.hovered
+            }
+            onClicked: deleteBox ()
+            // onClicked: console.log ('delete click')
+        }
     }
 }
 
@@ -134,5 +164,6 @@ Button {
 /*##^##
 Designer {
     D{i:0;autoSize:true;height:60;width:250}D{i:7;anchors_height:60;anchors_width:176;anchors_x:74;anchors_y:0}
+D{i:9;anchors_width:20;anchors_x:302}
 }
 ##^##*/
