@@ -1,12 +1,13 @@
 from box import Box
-from task import Task
-from listModel import BoxModel, TaskModel, Backend
+from listModel import Backend
 from fileop import FileOp
+from clock import Clock
 
 import sys
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
-from PySide2.QtCore import QObject, QStringListModel,Slot, Signal, QAbstractListModel, QModelIndex, Qt
+
+
 
 if __name__ == "__main__":
 
@@ -14,6 +15,7 @@ if __name__ == "__main__":
     model = f.createBox ()
     back = Backend ()
     back.boxModel = model
+    clock = Clock ()
 
     app = QGuiApplication (sys.argv)
 
@@ -23,6 +25,7 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty ("myModel", back.boxModel)
     engine.rootContext().setContextProperty ("tasks", back.taskModel)
     engine.rootContext().setContextProperty ("backend", back)
+    engine.rootContext().setContextProperty ("clock", clock)
     
     engine.quit.connect (app.quit)
     engine.load ("../qml/interface.qml")

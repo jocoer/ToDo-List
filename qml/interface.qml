@@ -302,6 +302,7 @@ minimizeRestore
                             onClicked: {
                                 btnHome.isActiveMenu = true
                                 btnSettings.isActiveMenu = false
+                                btnPomodoro.isActiveMenu = false
                                 stackView.clear ()
                                 stackView.push(Qt.resolvedUrl("./pages/homePage.qml"))
                             }
@@ -312,6 +313,13 @@ minimizeRestore
                             width: leftMenu.width
                             text: qsTr("Pomodoro")
                             btnIconSource: "../images/svg_images/clock.svg"
+                            onClicked: {
+                                btnPomodoro.isActiveMenu = true
+                                btnSettings.isActiveMenu = false
+                                btnHome.isActiveMenu = false
+                                stackView.clear ()
+                                stackView.push(Qt.resolvedUrl("./pages/clockPage.qml"), {clockend: clock})
+                            }
                         }
 
                         LeftMenuBtn {
@@ -335,6 +343,7 @@ minimizeRestore
 
                         onClicked: {
                             btnHome.isActiveMenu = false
+                            btnPomodoro.isActiveMenu = false
                             btnSettings.isActiveMenu = true
                             stackView.pop ()
                             stackView.push(Qt.resolvedUrl("./pages/settingsPage.qml"))
