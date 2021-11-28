@@ -37,32 +37,6 @@ class TaskModel (QAbstractListModel):
         }
 
 
-    # @Slot ()
-    # def taskCount (self):
-    #     count = 0
-    #     for t in self._data:
-    #         count += 1
-    #     print (f"task count: {count}")
-
-    # @Slot (str)
-    # def addTask (self, name):
-    #     self.beginInsertRows (QModelIndex (), self.rowCount(), self.rowCount())
-    #     t = Task (name)
-    #     self._data.append (t)
-    #     self.endInsertRows ()
-
-    # @Slot() 
-    # def clearTask(self): 
-    #     self.beginRemoveRows(QModelIndex(), 0, self.rowCount()) 
-    #     self._data.clear ()
-    #     self.endRemoveRows() 
-
-    # @Slot (str, int)
-    # def editTaskName (self, name, index):
-    #     ix = self.index (index, 0)
-    #     self._data[index].name = name
-    #     self.dataChanged.emit (ix, ix, self.roleNames())
-
 """任务盒数据类"""
 class BoxModel (QAbstractListModel):
     Name_Role = Qt.UserRole + 1

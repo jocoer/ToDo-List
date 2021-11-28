@@ -26,39 +26,3 @@ class FileOp:
         pickle.dump (b._data, f)
         print ("保存")
         f.close ()
-"""
-[
-    {
-        name: box1,
-        tasks: [
-            {
-                name: task1,
-                finish: False,
-                desc: xxxxxxxx,
-            }
-            {
-                name: task2
-                finish: True,
-                desc: xxxxxxxx,
-            }
-        ] 
-    }
-    {
-        name: box2,
-        tasks: [
-            {
-                name: task1,
-                finish: False,
-                desc: xxxxxxxx,
-            }
-            {
-                name: task2
-                finish: True,
-                desc: xxxxxxxx,
-            }
-        ] 
-
-    }
-]
-
-"""
