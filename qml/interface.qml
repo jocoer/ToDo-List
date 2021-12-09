@@ -239,7 +239,6 @@ Window {
                         id: btnMinimize
                         onClicked: {
                             mainWindow.showMinimized()
-minimizeRestore
                             internal.minimizeRestore()
                         }
                     }

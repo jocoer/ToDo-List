@@ -18,10 +18,11 @@ Item {
 
         Label {
             id: english
+            color: "#ffffff"
             text: qsTr("English")
             anchors.top: parent.top
             anchors.topMargin: 46
-            font.pointSize: 15
+            font.pointSize: 20
             font.italic: false
             font.weight: Font.DemiBold
             horizontalAlignment: Text.AlignHCenter
@@ -34,10 +35,11 @@ Item {
         Label {
             id: chinese
             x: 0
+            color: "#ffffff"
             text: qsTr("Chinese")
             anchors.top: english.bottom
             anchors.topMargin: 0
-            font.pointSize: 15
+            font.pointSize: 20
             font.weight: Font.DemiBold
             anchors.leftMargin: 20
             anchors.right: parent.right

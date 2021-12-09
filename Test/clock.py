@@ -1,9 +1,11 @@
 from PySide2.QtCore import QObject,Slot, Signal, QTimer
 import requests
 from bs4 import BeautifulSoup
+from playsound import playsound
 
 import json
 import requests
+import vlc, time
 
 class Clock (QObject):
     def __init__ (self):
@@ -25,6 +27,7 @@ class Clock (QObject):
         if (self.min == -1):
             # 结束计时
             self.pause ()
+            self.warning ()
             return
         secondStr = ""
         if self.second < 10:
@@ -69,3 +72,10 @@ class Clock (QObject):
         self.englishSentence = Englis
         self.chineseSentence = Chinese
  
+    # 倒计时结束，响声
+    def warning (self):
+        print ("播放开始")
+        player = vlc.MediaPlayer("../music/alarm.mp3")
+        player.play ()
+        time.sleep (3)
+        player.stop ()

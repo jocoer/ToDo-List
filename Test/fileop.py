@@ -1,5 +1,4 @@
 from listModel import BoxModel
-import shelve
 import pickle
 
 class FileOp:
