@@ -1,6 +1,6 @@
 from PySide2.QtCore import QObject,Slot, Signal, QTimer
 import requests
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from playsound import playsound
 
 import json

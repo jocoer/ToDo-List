@@ -3,14 +3,14 @@
 import QmlProject 1.1
 
 Project {
-//    mainFile: "interface.qml"
+    mainFile: "interface.qml"
 //    mainFile: "controls/CustomBtn.qml"
 //    mainFile: "controls/TopBarButton.qml"
 //    mainFile: "controls/LeftMenuBtn.qml"
 //    mainFile: "pages/homePage.qml"
 //    mainFile: "controls/BoxBtn.qml"
 //    mainFile: "controls/ClockSlider.qml"
-    mainFile: "pages/clockPage.qml"
+//    mainFile: "pages/clockPage.qml"
 
     /* Include .qml, .js, and image files from current directory and subdirectories */
     QmlFiles {
